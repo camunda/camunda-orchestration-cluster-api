@@ -10257,8 +10257,8 @@ components:
           allOf:
             - $ref: "#/components/schemas/DecisionEvaluationKey"
             - description: "The key of the parent decision evaluation. Note that this is not\
-                \ the unique identifier of the decision instance; the `decisionEvaluationInstanceKey`\
-                \ is the identifier.\n"
+                \ the identifier of an individual decision instance; the `decisionEvaluationInstanceKey`\
+                \ is the identifier for a decision instance.\n"
         processDefinitionKey:
           allOf:
             - $ref: "#/components/schemas/ProcessDefinitionKey"
