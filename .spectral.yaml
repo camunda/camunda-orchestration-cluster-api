@@ -1,0 +1,145 @@
+extends: ["spectral:oas"]
+
+functions:
+  - enforceCamundaKeys
+  - enforceCamundaKeyPathParams
+  - vendorExtensionWhitelist
+  - duplicatePolicyConsistency
+  - idempotencyKeyHeaderPresent
+  - conditionalIdempotencyStructure
+
+rules:
+  key-properties-must-extend-camunda-key:
+    description: "Properties ending in 'Key' must use $ref (not primitive types like string)."
+    message: "Property '{{property}}' must use $ref, not a primitive type. This is a CamundaKey property, so it must reference a schema that extends CamundaKey."
+    given: $..properties[?(@property.match(/^[a-z].*Key$/))]
+    severity: error
+    then:
+      function: enforceCamundaKeys
+      functionOptions:
+        exceptions:
+          correlationKey
+          itemKey
+
+  key-property-ref-must-point-to-camundakey-or-subtype:
+    description: "Properties ending in 'Key' must reference CamundaKey or a schema that extends it via allOf."
+    message: "Key property '{{property}}' must reference CamundaKey or a schema that extends it."
+    given: "$.paths..properties[?(@property.match(/^[a-z].*Key$/))]"
+    severity: error
+    then:
+      function: pattern
+      functionOptions:
+        match: "#/components/schemas/(CamundaKey|[A-Za-z]+Key)$"
+
+  key-path-params-must-use-ref:
+    description: "Path parameters ending in 'Key' must use $ref to CamundaKey or a subtype."
+    message: "Path parameter '{{value.name}}' must use $ref, not a primitive type. It should reference a schema extending CamundaKey."
+    given: "$.paths[*][*].parameters[?(@.in=='path' && @.name.match(/Key$/))]"
+    severity: error
+    then:
+      function: enforceCamundaKeyPathParams
+      functionOptions:
+        exceptions:
+          - correlationKey
+
+  vendor-extensions-whitelist:
+    description: "Only approved vendor extensions are allowed."
+    message: "{{error}}"
+    given: "$"
+    severity: error
+    then:
+      function: vendorExtensionWhitelist
+      functionOptions:
+        allowedExtensions:
+          - "x-eventually-consistent"
+          - "x-semantic-type"
+          - "x-polymorphic-schema"
+          - "x-semantic-provider"
+          - "x-operation-kind"
+          - "x-duplicate-policy"
+          - "x-idempotency-mechanism"
+          - "x-idempotency-key-header"
+          - "x-idempotency-scope"
+          - "x-conditional-idempotency"
+
+  endpoints-must-have-consistency-declaration:
+    description: "All endpoints must have x-eventually-consistent vendor extension."
+    message: "Endpoint is missing x-eventually-consistent declaration. All endpoints must explicitly declare either 'x-eventually-consistent: true' or 'x-eventually-consistent: false'."
+    given: 
+      - "$.paths[*].get"
+      - "$.paths[*].post"
+      - "$.paths[*].put"
+      - "$.paths[*].patch"
+      - "$.paths[*].delete"
+      - "$.paths[*].head"
+      - "$.paths[*].options"
+      - "$.paths[*].trace"
+    severity: error
+    then:
+      field: "x-eventually-consistent"
+      function: defined
+
+  no-path-level-consistency-declaration:
+    description: "x-eventually-consistent must be declared at operation level, not path level."
+    message: "Path has x-eventually-consistent declared at path level. This extension should only be declared at the individual operation level (get, post, put, etc.) to ensure proper granularity and avoid inheritance issues."
+    given: "$.paths[*]['x-eventually-consistent']"
+    severity: error
+    then:
+      function: falsy
+
+  create-operation-must-have-duplicate-policy:
+    description: Create operations must declare x-duplicate-policy (phase 2+)
+    given: "$..paths[*][*]"
+    severity: warn  # upgrade to error when coverage is complete
+    then:
+      function: duplicatePolicyConsistency
+      functionOptions:
+        requirePolicyForCreate: true
+
+  duplicate-policy-not-on-non-create:
+    description: x-duplicate-policy only valid on create operations
+    given: "$..paths[*][*]"
+    severity: error
+    then:
+      function: duplicatePolicyConsistency
+      functionOptions:
+        forbidPolicyOnNonCreate: true
+
+  duplicate-policy-idempotency-alignment:
+    description: x-duplicate-policy must align with idempotent flag
+    given: "$..paths[*][*]"
+    severity: error
+    then:
+      function: duplicatePolicyConsistency
+      functionOptions:
+        enforceAlignment: true
+
+  conditional-idempotency-structure:
+    description: x-conditional-idempotency vendor extension must have required structure
+    message: "{{error}}"
+    given: "$..paths[*][*]"
+    severity: error
+    then:
+      function: conditionalIdempotencyStructure
+
+  idempotency-mechanism-header:
+    description: idempotency-key mechanism requires matching header parameter
+    given: "$..paths[*][*]"
+    severity: error
+    then:
+      function: idempotencyKeyHeaderPresent
+
+  conflict-mechanism-warning:
+    description: conflict duplicate policy should not use advanced idempotency mechanism
+    given: "$..paths[*][*]"
+    severity: warn
+    then:
+      function: duplicatePolicyConsistency
+      functionOptions:
+        warnConflictWithMechanism: true
+
+overrides:
+  - files:
+      - "rest-api.yaml"
+    rules:
+      no-$ref-siblings: "off"
