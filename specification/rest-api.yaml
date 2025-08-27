@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=./schemas/openapi-operation-metadata-extensions.schema.json
+# yaml-language-server: $schema=../schemas/openapi-operation-metadata-extensions.schema.json
 openapi: "3.0.3"
 info:
   title: "Orchestration Cluster API"
@@ -5583,6 +5583,9 @@ components:
         tenantId:
           type: "string"
           description: "The unique ID for the tenant."
+          minLength: 1
+          maxLength: 256
+          pattern: "^[A-Za-z0-9_@.+-]+$"
         name:
           type: "string"
           description: "The name of the tenant."
@@ -8090,7 +8093,6 @@ components:
       type: "object"
       required:
         - "username"
-        - "authorizedComponents"
         - "tenants"
         - "groups"
         - "roles" 
@@ -9886,7 +9888,6 @@ components:
       type: "object"
       required:
         - "totalItems"
-        - "hasMoreTotalItems"
       properties:
         totalItems:
           description: "Total items matching the criteria."
@@ -10255,9 +10256,9 @@ components:
         decisionEvaluationKey:
           allOf:
             - $ref: "#/components/schemas/DecisionEvaluationKey"
-            - description: "The key of the decision instance. Note that this is not\
-                \ the unique identifier of the entity itself; the `decisionInstanceId`\
-                \ serves as the primary identifier.\n"
+            - description: "The key of the parent decision evaluation. Note that this is not\
+                \ the unique identifier of the decision instance; the `decisionEvaluationInstanceKey`\
+                \ is the identifier.\n"
         processDefinitionKey:
           allOf:
             - $ref: "#/components/schemas/ProcessDefinitionKey"
@@ -10449,7 +10450,6 @@ components:
           nullable: true
       required:
         - "name"
-        - "correlationKey"
     MessagePublicationResult:
       description: "The message key of the published message."
       type: "object"
@@ -11585,22 +11585,22 @@ components:
     TenantId: 
       allOf:
         - $ref: "#/components/schemas/CamundaKey"
-          example: "customer-service"
+        - example: "customer-service"
           format: "TenantId"
           description: "The unique identifier of the tenant."
           x-semantic-type: "TenantId"
-          minLength: "1" 
-          maxLength: "256" 
+          minLength: 1
+          maxLength: 256
           pattern: "^(<default>|[A-Za-z0-9_@.+-]+)$"
     Username: 
       allOf:
         - $ref: "#/components/schemas/CamundaKey"
-          example: "swillis"
+        - example: "swillis"
           format: "Username"
           description: "The unique name of a user."
           x-semantic-type: "Username"
-          minLength: "1" 
-          maxLength: "256" 
+          minLength: 1
+          maxLength: 256
           pattern: "^(<default>|[A-Za-z0-9_@.+-]+)$"
     OperationMetadata:
       description: "Information about the operation effect characteristics. Suitable for reasoning about the idempotency and safety of operations"
