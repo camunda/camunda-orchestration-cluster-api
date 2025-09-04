@@ -10480,6 +10480,7 @@ components:
           description: "The correlation key of the message."
           type: "string"
           example: "customer-43421"
+          default: "\"\""
         timeToLive:
           description: "Timespan (in ms) to buffer the message on the broker."
           type: "integer"
