@@ -5636,7 +5636,7 @@ components:
       properties:
         tenantId:
           type: "string"
-          description: "The unique ID for the tenant."
+          description: "The unique ID for the tenant. Must be 255 characters or less. Can contain letters, numbers, [`_`, `-`, `+`, `.`, `@`]."
           minLength: 1
           maxLength: 256
           pattern: "^[A-Za-z0-9_@.+-]+$"
