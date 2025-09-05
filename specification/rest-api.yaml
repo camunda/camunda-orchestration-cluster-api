@@ -11630,6 +11630,15 @@ components:
         errorMessage:
           description: "the error message from the engine in case of a failed operation."
           type: "string"
+    ProcessInstanceCancellationBatchOperationRequest:
+      type: object
+      description: |
+        The process instance filter that defines which process instances should be canceled.
+      properties:
+        filter:
+          $ref: "#/components/schemas/ProcessInstanceFilter"
+      required:
+        - filter
     ProcessInstanceModificationBatchOperationRequest:
       type: "object"
       description: "The process instance filter to define on which process instances\
