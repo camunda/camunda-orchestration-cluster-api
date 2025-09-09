@@ -10925,9 +10925,14 @@ components:
             \ affect the runtime behavior of\nthe process instance. Refer to specific\
             \ instruction types for more details.\n\nThis parameter is an alpha\
             \ feature and may be subject to change\nin future releases.\n"
-          type: "array"
+          type: array
           items:
-            $ref: "#/components/schemas/ProcessInstanceCreationRuntimeInstruction"
+            oneOf:
+              - $ref: "#/components/schemas/ProcessInstanceCreationTerminateInstruction"
+            discriminator:  
+              propertyName: "type"
+              mapping: 
+                TERMINATE_PROCESS_INSTANCE: "#/components/schemas/ProcessInstanceCreationTerminateInstruction"
         awaitCompletion:
           description: "Wait for the process instance to complete. If the process\
             \ instance completion does\nnot occur within the requestTimeout, the\
@@ -10986,9 +10991,14 @@ components:
             \ affect the runtime behavior of\nthe process instance. Refer to specific\
             \ instruction types for more details.\n\nThis parameter is an alpha\
             \ feature and may be subject to change\nin future releases.\n"
-          type: "array"
+          type: array
           items:
-            $ref: "#/components/schemas/ProcessInstanceCreationRuntimeInstruction"
+            oneOf:
+              - $ref: "#/components/schemas/ProcessInstanceCreationTerminateInstruction"
+            discriminator:  
+              propertyName: "type"
+              mapping: 
+                TERMINATE_PROCESS_INSTANCE: "#/components/schemas/ProcessInstanceCreationTerminateInstruction"
         awaitCompletion:
           description: "Wait for the process instance to complete. If the process\
             \ instance completion does\nnot occur within the requestTimeout, the\
@@ -11014,6 +11024,8 @@ components:
           $ref: '#/components/schemas/TagSet'
     ProcessInstanceCreationStartInstruction:
       type: "object"
+      required: 
+        - "elementId"
       properties:
         elementId:
           description: "Future extensions might include:\n  - different types of start\
@@ -11050,6 +11062,7 @@ components:
             afterElementId:
               description: "The ID of the element that, once completed or terminated,\
                 \ will cause the process to be terminated.\n"
+              example: "Activity_106kosb"
               allOf:
                 - $ref: "#/components/schemas/ElementId"
           description: "Terminates the process instance after a specific BPMN element\
