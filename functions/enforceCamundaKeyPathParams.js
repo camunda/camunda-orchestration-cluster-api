@@ -1,33 +1,27 @@
-module.exports = function (targetVal, opts, context) {
+module.exports = function (targetVal, opts) {
   if (!targetVal || typeof targetVal !== 'object') return;
 
-  const path = context.path || [];
-
-  // Ensure we are only validating schemas of path parameters
+  const name = targetVal.name;
+  if (!name) return; // skip malformed parameter objects
   const isPathParam = targetVal.in === 'path';
-  const isKeyParam = targetVal.name && /Key$/.test(targetVal.name);
-  const isException = opts?.exceptions?.includes(targetVal.name);
+  const isKeyParam = /Key$/.test(name);
+  const isException = opts?.exceptions?.includes(name);
+  if (!(isPathParam && isKeyParam) || isException) return;
 
-  if (isPathParam && isKeyParam && !isException) {
-    const schema = targetVal.schema;
-    
-    // Helper function to check if a schema contains CamundaKey indicators
-    const containsCamundaKey = (schemaObj) => {
-      return schemaObj?.format === 'Camunda Key' || 
-             schemaObj?.pattern === '^-?[0-9]+$' ||
-             schemaObj?.allOf?.some(item => item.format === 'Camunda Key' || item.pattern === '^-?[0-9]+$');
-    };
-    
-    // Check if the schema indicates it's a CamundaKey (direct, allOf, or oneOf)
-    const isCamundaKey = containsCamundaKey(schema) ||
-                         schema?.oneOf?.some(option => containsCamundaKey(option));
-    
-    if (!isCamundaKey) {
-      return [
-        {
-          message: `Path parameter '${targetVal.name}' must use $ref, not a primitive type. It should reference a schema that extends CamundaKey.`,
-        },
-      ];
-    }
+  const schema = targetVal.schema;
+  if (!schema) {
+    return [{ message: `Path parameter '${name}' must reference a semantic key schema via $ref or inline semantic marker.` }];
   }
+
+  // If it is a $ref, accept (referenced schema will be validated by other rules for markers + type string)
+  if (schema.$ref) return;
+
+  // Allow inline ONLY if it is a string and carries semantic marker(s)
+  const hasMarker = Object.prototype.hasOwnProperty.call(schema, 'x-semantic-type') || Object.prototype.hasOwnProperty.call(schema, 'x-semantic-key');
+  if (schema.type === 'string' && hasMarker) return; // valid inline semantic key
+
+  // If inline but missing marker or wrong type, emit error with actionable guidance
+  return [{
+    message: `Path parameter '${name}' must be a $ref to a semantic key schema or inline with type: string and x-semantic-type (or x-semantic-key).`,
+  }];
 };
