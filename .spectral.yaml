@@ -211,6 +211,6 @@ overrides:
       key-schemas-must-declare-semantic-type: "off"
 
   - files:
-      - "rest-api.domain.yaml"
+      - "rest-api.yaml"
     rules:
       no-$ref-siblings: "off"
