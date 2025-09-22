@@ -10825,7 +10825,6 @@ components:
             - $ref: "#/components/schemas/TenantId"
       required:
         - "name"
-        - "correlationKey"
     MessagePublicationResult:
       description: "The message key of the published message."
       type: "object"
