@@ -114,7 +114,7 @@ paths:
       summary: "Get current user"
       description: "Retrieves the current authenticated user."
       security:
-        - BearerAuth: []  
+        - BearerAuth: []
       responses:
         "200":
           description: "The current user is successfully returned."
@@ -124,11 +124,11 @@ paths:
                 $ref: "#/components/schemas/CamundaUserResult"
         "401":
           $ref: "#/components/responses/Unauthorized"
-        "403": 
+        "403":
           $ref: "#/components/responses/Forbidden"
         "500":
           $ref: "#/components/responses/InternalServerError"
-      x-eventually-consistent: false   
+      x-eventually-consistent: false
   /jobs/activation:
     post:
       tags:
@@ -214,7 +214,7 @@ paths:
         "400":
           $ref: "#/components/responses/InvalidData"
         "404":
-          description: "The job with the given jobKey is not found. It was completed by another worker, or the process instance itself was cancelled.\n"
+          description: "The job with the given jobKey is not found. It was completed by another worker, or the process instance itself was canceled.\n"
           content:
             application/problem+json:
               schema:
@@ -471,7 +471,7 @@ paths:
         "500":
           $ref: "#/components/responses/InternalServerError"
       x-eventually-consistent: true
-      x-operation-kind: 
+      x-operation-kind:
         kind: "query"
     put:
       tags:
@@ -3339,7 +3339,7 @@ paths:
         "500":
           $ref: "#/components/responses/InternalServerError"
       x-eventually-consistent: true
-      
+
   /roles/{roleId}/mapping-rules/{mappingRuleId}:
     put:
       tags:
@@ -4416,7 +4416,7 @@ paths:
         to identify which documents failed to upload. The file name can be provided in the `Content-Disposition` header\
         of the file part or in the `fileName` field of the metadata. You can add a parallel array of metadata objects. These\
         are matched with the files based on index, and must have the same length as the files array.\
-        To pass homogenous metadata for all files, spread the metadata over the metadata array.\ 
+        To pass homogenous metadata for all files, spread the metadata over the metadata array.\
         A filename value provided explicitly via the metadata array in the request overrides the `Content-Disposition` header\
         of the file part. \n\nIn case of a multi-status response, the response\
         \ body will contain a list of `DocumentBatchProblemDetail` objects,\neach\
@@ -4450,11 +4450,11 @@ paths:
                     type: "string"
                     format: "binary"
                   minItems: 1
-                metadataList: 
-                  type: array 
-                  description: "Optional JSON array of metadata object whose index aligns with each file entry. The metadata array must have the same length as the files array." 
-                  items: 
-                    $ref: "#/components/schemas/DocumentMetadata" 
+                metadataList:
+                  type: array
+                  description: "Optional JSON array of metadata object whose index aligns with each file entry. The metadata array must have the same length as the files array."
+                  items:
+                    $ref: "#/components/schemas/DocumentMetadata"
               required:
                 - "files"
             encoding:
@@ -5474,7 +5474,7 @@ components:
       type: "string"
       allOf:
         - $ref: "#/components/schemas/LongKey"
-    ProcessDefinitionId: 
+    ProcessDefinitionId:
       description: "Id of a process definition, from the model. Only ids of process definitions that are deployed\
           \ are useful."
       format: "ProcessDefinitionId"
@@ -5491,7 +5491,7 @@ components:
       type: "string"
       allOf:
         - $ref: "#/components/schemas/LongKey"
-    ElementId: 
+    ElementId:
       description: "The model-defined id of an element."
       format: "ElementId"
       type: "string"
@@ -5505,11 +5505,11 @@ components:
       type: "string"
       allOf:
         - $ref: "#/components/schemas/LongKey"
-    FormId: 
+    FormId:
       description: "The user-defined id for the form"
       type: "string"
       format: "FormId"
-      x-semantic-type: "FormId" 
+      x-semantic-type: "FormId"
       example: "Form_1nx5hav"
     VariableKey:
       description: "System-generated key for a variable."
@@ -5575,7 +5575,7 @@ components:
       example: "2251799813326547"
       type: "string"
       allOf:
-        - $ref: "#/components/schemas/LongKey"       
+        - $ref: "#/components/schemas/LongKey"
     DecisionDefinitionId:
       description: "Id of a decision definition, from the model. Only ids of decision definitions that are deployed\
           \ are useful."
@@ -5595,7 +5595,7 @@ components:
       allOf:
         - $ref: "#/components/schemas/LongKey"
     DecisionEvaluationKey:
-      allOf: 
+      allOf:
         - $ref: "#/components/schemas/LongKey"
       description: "System-generated key for a decision evaluation."
       format: "DecisionEvaluationKey"
@@ -5669,7 +5669,8 @@ components:
         - "name"
     TenantCreateResult:
       type: "object"
-      x-semantic-provider: "tenantId"
+      x-semantic-provider:
+        - "tenantId"
       properties:
         tenantId:
           $ref: "#/components/schemas/TenantId"
@@ -6927,7 +6928,7 @@ components:
       type: "object"
       allOf:
         - $ref: "#/components/schemas/SearchQueryResponse"
-      required: 
+      required:
         - "items"
       properties:
         items:
@@ -7264,7 +7265,7 @@ components:
             $ref: "#/components/schemas/ElementInstanceResult"
     ElementInstanceResult:
       type: "object"
-      required: 
+      required:
         - "processDefinitionId"
         - "startDate"
         - "elementId"
@@ -7595,11 +7596,11 @@ components:
           type: "string"
         elementInstanceKey:
           description: "The element instance key that received the message."
-          allOf:  
+          allOf:
             - $ref: "#/components/schemas/ElementInstanceKey"
         messageKey:
           description: "The message key."
-          allOf:  
+          allOf:
             - $ref: "#/components/schemas/MessageKey"
         messageName:
           description: "The name of the message."
@@ -7610,23 +7611,23 @@ components:
           format: "int32"
         processDefinitionId:
           description: "The process definition ID associated with this correlated message subscription."
-          allOf:  
+          allOf:
             - $ref: "#/components/schemas/ProcessDefinitionId"
         processDefinitionKey:
           description: "The process definition key associated with this correlated message subscription."
-          allOf:  
+          allOf:
             - $ref: "#/components/schemas/ProcessDefinitionKey"
         processInstanceKey:
           description: "The process instance key associated with this correlated message subscription."
-          allOf:  
+          allOf:
             - $ref: "#/components/schemas/ProcessInstanceKey"
         subscriptionKey:
           description: "The subscription key that received the message."
-          allOf:  
+          allOf:
             - $ref: "#/components/schemas/MessageSubscriptionKey"
         tenantId:
           description: "The tenant ID associated with this correlated message subscription."
-          allOf:  
+          allOf:
             - $ref: "#/components/schemas/TenantId"
       required:
         - "correlationKey"
@@ -8126,9 +8127,7 @@ components:
           description: "The ID of the owner of the permissions."
           type: "string"
         ownerType:
-          description: "The type of the owner of the permissions."
-          allOf:
-            - $ref: "#/components/schemas/OwnerTypeEnum"
+          $ref: "#/components/schemas/OwnerTypeEnum"
         resourceId:
           description: "The ID of the resource to add permissions to."
           type: "string"
@@ -8194,10 +8193,7 @@ components:
           description: "The ID of the owner of permissions."
           type: "string"
         ownerType:
-          description: "The type of the owner of permissions."
-          type: "object"
-          allOf:
-            - $ref: "#/components/schemas/OwnerTypeEnum"
+          $ref: "#/components/schemas/OwnerTypeEnum"
         resourceIds:
           description: "The IDs of the resource to search permissions for."
           type: "array"
@@ -8215,12 +8211,9 @@ components:
           description: "The ID of the owner of permissions."
           type: "string"
         ownerType:
-          description: "The type of the owner of permissions."
-          type: "string"
-          allOf:
-            - $ref: "#/components/schemas/OwnerTypeEnum"
+          $ref: "#/components/schemas/OwnerTypeEnum"
         resourceType:
-          description: "The type of resource that owner have permissions."
+          description: "The type of resource that the permissions relate to."
           type: "string"
           allOf:
             - $ref: "#/components/schemas/ResourceTypeEnum"
@@ -8266,7 +8259,8 @@ components:
           type: "string"
     UserCreateResult:
       type: "object"
-      x-semantic-provider: "username"
+      x-semantic-provider:
+        - "username"
       properties:
         username:
           $ref: "#/components/schemas/Username"
@@ -8383,7 +8377,7 @@ components:
       required:
         - "tenants"
         - "groups"
-        - "roles" 
+        - "roles"
         - "salesPlanType"
         - "c8Links"
         - "canLogout"
@@ -9387,11 +9381,15 @@ components:
           items:
             $ref: "#/components/schemas/ActivatedJobResult"
     ActivatedJobResult:
+      x-semantic-provider:
+        - "elementId"
+        - "jobKey"
+        - "elementInstanceKey"
       type: "object"
       required:
        - "type"
        - "processDefinitionId"
-       - "processDefinitionVersion" 
+       - "processDefinitionVersion"
        - "elementId"
        - "customHeaders"
        - "worker"
@@ -9422,7 +9420,6 @@ components:
           example: 1
         elementId:
           description: "The associated task element ID."
-          x-semantic-provider: true
           allOf:
             - $ref: "#/components/schemas/ElementId"
         customHeaders:
@@ -9457,7 +9454,6 @@ components:
           allOf:
             - $ref: "#/components/schemas/TenantId"
         jobKey:
-          x-semantic-provider: true
           allOf:
             - $ref: "#/components/schemas/JobKey"
           description: "The key, a unique identifier for the job."
@@ -9470,7 +9466,6 @@ components:
             - $ref: "#/components/schemas/ProcessDefinitionKey"
           description: "The key of the job's process definition."
         elementInstanceKey:
-          x-semantic-provider: true
           allOf:
             - $ref: "#/components/schemas/ElementInstanceKey"
           description: "The unique key identifying the associated task, unique\
@@ -10342,7 +10337,7 @@ components:
             \ was parsed."
         tenantId:
           description: "The tenant ID of the decision requirements."
-          allOf: 
+          allOf:
             - $ref: "#/components/schemas/TenantId"
         decisionRequirementsKey:
           allOf:
@@ -10392,8 +10387,10 @@ components:
             - $ref: "#/components/schemas/TenantId"
       required: ["decisionDefinitionKey"]
     EvaluateDecisionResult:
+      x-semantic-provider:
+        - "decisionEvaluationKey"
       type: "object"
-      required: 
+      required:
         - "decisionDefinitionId"
         - "decisionDefinitionName"
         - "decisionDefinitionVersion"
@@ -10452,7 +10449,6 @@ components:
           description: "Deprecated, please refer to `decisionEvaluationKey`."
           deprecated: true
         decisionEvaluationKey:
-          x-semantic-provider: true
           description: The unique key identifying this decision evaluation.
           allOf:
             - $ref: "#/components/schemas/DecisionEvaluationKey"
@@ -10463,6 +10459,8 @@ components:
           items:
             $ref: "#/components/schemas/EvaluatedDecisionResult"
     EvaluatedDecisionResult:
+      x-semantic-provider: 
+        - "decisionEvaluationInstanceKey"
       type: "object"
       description: "A decision that was evaluated."
       properties:
@@ -10504,7 +10502,6 @@ components:
             - $ref: "#/components/schemas/DecisionDefinitionKey"
           description: "The unique key identifying the decision which was evaluate."
         decisionEvaluationInstanceKey:
-          x-semantic-provider: true
           allOf:
             - $ref: "#/components/schemas/DecisionEvaluationInstanceKey"
           description: The unique key identifying this decision evaluation instance.
@@ -10787,7 +10784,7 @@ components:
       properties:
         tenantId:
           description: "The tenant ID of the correlated message"
-          allOf: 
+          allOf:
             - $ref: "#/components/schemas/TenantId"
         messageKey:
           allOf:
@@ -10973,6 +10970,9 @@ components:
           $ref: "#/components/schemas/DeploymentResourceResult"
     DeploymentProcessResult:
       description: "A deployed process."
+      x-semantic-provider: 
+        - "processDefinitionKey"
+        - "processDefinitionId"
       type: "object"
       required:
         - "processDefinitionId"
@@ -10998,7 +10998,6 @@ components:
           allOf:
             - $ref: "#/components/schemas/TenantId"
         processDefinitionKey:
-          x-semantic-provider: true
           allOf:
             - $ref: "#/components/schemas/ProcessDefinitionKey"
           description: "The assigned key, which acts as a unique identifier for\
@@ -11006,6 +11005,9 @@ components:
     DeploymentDecisionResult:
       description: "A deployed decision."
       type: "object"
+      x-semantic-provider: 
+        - "decisionDefinitionKey"
+        - "decisionRequirementsKey"
       properties:
         decisionDefinitionId:
           allOf:
@@ -11028,13 +11030,11 @@ components:
           description: "The dmn ID of the decision requirements graph that this decision\
             \ is part of, as parsed during deployment.\n"
         decisionDefinitionKey:
-          x-semantic-provider: true
           allOf:
             - $ref: "#/components/schemas/DecisionDefinitionKey"
           description: "The assigned decision key, which acts as a unique identifier\
                 \ for this decision.\n"
         decisionRequirementsKey:
-          x-semantic-provider: true
           allOf:
             - $ref: "#/components/schemas/DecisionRequirementsKey"
           description: "The assigned key of the decision requirements graph that\
@@ -11042,7 +11042,8 @@ components:
     DeploymentDecisionRequirementsResult:
       description: "Deployed decision requirements."
       type: "object"
-      x-semantic-provider: "decisionRequirementsKey"
+      x-semantic-provider: 
+        - "decisionRequirementsKey"
       properties:
         decisionRequirementsId:
           type: "string"
@@ -11073,7 +11074,8 @@ components:
     DeploymentFormResult:
       description: "A deployed form."
       type: "object"
-      x-semantic-provider: "formKey"
+      x-semantic-provider: 
+        - "formKey"
       properties:
         formId:
           allOf:
@@ -11096,7 +11098,8 @@ components:
                 \ this form."
     DeploymentResourceResult:
       description: "A deployed Resource."
-      x-semantic-provider: "resourceKey"
+      x-semantic-provider: 
+        - "resourceKey"
       type: "object"
       properties:
         resourceId:
@@ -11264,7 +11267,7 @@ components:
           $ref: '#/components/schemas/TagSet'
     ProcessInstanceCreationStartInstruction:
       type: "object"
-      required: 
+      required:
         - "elementId"
       properties:
         elementId:
@@ -11283,13 +11286,13 @@ components:
         type:
           description: "The type of the runtime instruction"
           type: "string"
-          enum: 
+          enum:
             - "TERMINATE_PROCESS_INSTANCE"
       oneOf:
         - $ref: "#/components/schemas/ProcessInstanceCreationTerminateInstruction"
-      discriminator:  
+      discriminator:
         propertyName: "type"
-        mapping: 
+        mapping:
           TERMINATE_PROCESS_INSTANCE: "#/components/schemas/ProcessInstanceCreationTerminateInstruction"
     # ProcessInstanceCreationRuntimeInstruction:
     #   type: "object"
@@ -11322,7 +11325,9 @@ components:
           allOf:
             - $ref: "#/components/schemas/ElementId"
     CreateProcessInstanceResult:
-      required: 
+      x-semantic-provider:
+        - "processInstanceKey"
+      required:
        - "processDefinitionId"
        - "processDefinitionKey"
        - "processDefinitionVersion"
@@ -11358,7 +11363,6 @@ components:
           description: "The key of the process definition which was used to create\
                 \ the process instance.\n"
         processInstanceKey:
-          x-semantic-provider: true
           allOf:
             - $ref: "#/components/schemas/ProcessInstanceKey"
           description: "The unique identifier of the created process instance;\
@@ -11555,10 +11559,11 @@ components:
         - "signalName"
     SignalBroadcastResult:
       type: "object"
-      required: 
+      required:
         - "tenantId"
         - "signalKey"
-      x-semantic-provider: "signalKey"
+      x-semantic-provider:
+        - "signalKey"
       properties:
         tenantId:
           description: "The tenant ID of the signal that was broadcast."
@@ -12047,7 +12052,7 @@ components:
         $ref: '#/components/schemas/Tag'
       uniqueItems: true
       maxItems: 10
-    TenantId: 
+    TenantId:
       example: "customer-service"
       description: "The unique identifier of the tenant."
       format: "TenantId"
@@ -12056,7 +12061,7 @@ components:
       minLength: 1
       maxLength: 256
       pattern: "^(<default>|[A-Za-z0-9_@.+-]+)$"
-    Username: 
+    Username:
       example: "swillis"
       format: "Username"
       description: "The unique name of a user."
