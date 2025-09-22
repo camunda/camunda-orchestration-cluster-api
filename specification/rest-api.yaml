@@ -10759,7 +10759,6 @@ components:
       additionalProperties: false
       required:
         - "name"
-        - "correlationKey"
       properties:
         name:
           description: "The message name as defined in the BPMN process\n"
