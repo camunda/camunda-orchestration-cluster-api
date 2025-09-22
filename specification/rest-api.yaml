@@ -6997,12 +6997,14 @@ components:
           $ref: '#/components/schemas/TagSet'
     ProcessInstanceStateEnum:
       description: "Process instance states"
+      type: "string"
       enum:
         - "ACTIVE"
         - "COMPLETED"
         - "TERMINATED"
     ElementInstanceStateEnum:
       description: "Element states"
+      type: "string"
       enum:
         - "ACTIVE"
         - "COMPLETED"
@@ -9604,6 +9606,9 @@ components:
             - "userTask"
             - "adHocSubProcess"
           default: "userTask"
+      oneOf:
+        - $ref: "#/components/schemas/JobResultUserTask"
+        - $ref: "#/components/schemas/JobResultAdHocSubProcess"
     JobResultUserTask:
       type: "object"
       nullable: true
@@ -9990,6 +9995,7 @@ components:
           type: "string"
     JobStateEnum:
       description: "The state of the job."
+      type: "string"
       enum:
         - "CANCELED"
         - "COMPLETED"
@@ -10002,6 +10008,7 @@ components:
     JobKindEnum:
       description: "The job kind."
       example: "BPMN_ELEMENT"
+      type: "string"
       enum:
         - "BPMN_ELEMENT"
         - "EXECUTION_LISTENER"
@@ -10026,6 +10033,7 @@ components:
         - type: "string"
           title: "Exact match"
           description: "Matches the value exactly."
+          format: "JobStateEnum"
           allOf:
             - $ref: "#/components/schemas/JobStateEnum"
         - $ref: "#/components/schemas/AdvancedJobStateFilter"
@@ -10722,6 +10730,7 @@ components:
               description: "The matched rules of the decision instance.\n"
     DecisionDefinitionTypeEnum:
       description: "The type of the decision."
+      type: "string"
       enum:
         - "DECISION_TABLE"
         - "LITERAL_EXPRESSION"
@@ -10729,6 +10738,7 @@ components:
         - "UNKNOWN"
     DecisionInstanceStateEnum:
       description: "The state of the decision instance."
+      type: "string"
       enum:
         - "EVALUATED"
         - "FAILED"
@@ -11164,12 +11174,7 @@ components:
             \ feature and may be subject to change\nin future releases.\n"
           type: array
           items:
-            oneOf:
-              - $ref: "#/components/schemas/ProcessInstanceCreationTerminateInstruction"
-            discriminator:  
-              propertyName: "type"
-              mapping: 
-                TERMINATE_PROCESS_INSTANCE: "#/components/schemas/ProcessInstanceCreationTerminateInstruction"
+            $ref: "#/components/schemas/ProcessInstanceCreationRuntimeInstruction"
         awaitCompletion:
           description: "Wait for the process instance to complete. If the process\
             \ instance completion does\nnot occur within the requestTimeout, the\
@@ -11232,12 +11237,7 @@ components:
             \ feature and may be subject to change\nin future releases.\n"
           type: array
           items:
-            oneOf:
-              - $ref: "#/components/schemas/ProcessInstanceCreationTerminateInstruction"
-            discriminator:  
-              propertyName: "type"
-              mapping: 
-                TERMINATE_PROCESS_INSTANCE: "#/components/schemas/ProcessInstanceCreationTerminateInstruction"
+            $ref: "#/components/schemas/ProcessInstanceCreationRuntimeInstruction"
         awaitCompletion:
           description: "Wait for the process instance to complete. If the process\
             \ instance completion does\nnot occur within the requestTimeout, the\
@@ -11274,40 +11274,53 @@ components:
             startBeforeElement\" instruction\n"
           allOf:
             - $ref: "#/components/schemas/ElementId"
-    RuntimeInstructionType:
-      type: "string"
-      description: "The type of the runtime instruction. For now, only TERMINATE_PROCESS_INSTANCE\
-        \ is supported.\n"
-      enum:
-        - "TERMINATE_PROCESS_INSTANCE"
     ProcessInstanceCreationRuntimeInstruction:
       type: "object"
+      description: "Runtime instructions"
       required:
         - "type"
       properties:
         type:
-          $ref: "#/components/schemas/RuntimeInstructionType"
-      discriminator:
+          description: "The type of the runtime instruction"
+          type: "string"
+          enum: 
+            - "TERMINATE_PROCESS_INSTANCE"
+      oneOf:
+        - $ref: "#/components/schemas/ProcessInstanceCreationTerminateInstruction"
+      discriminator:  
         propertyName: "type"
-        mapping:
+        mapping: 
           TERMINATE_PROCESS_INSTANCE: "#/components/schemas/ProcessInstanceCreationTerminateInstruction"
-      description: "Base type for all runtime instructions.\n"
+    # ProcessInstanceCreationRuntimeInstruction:
+    #   type: "object"
+    #   required:
+    #     - "type"
+    #   properties:
+    #     type:
+    #       $ref: "#/components/schemas/RuntimeInstructionType"
+    #   discriminator:
+    #     propertyName: "type"
+    #     mapping:
+    #       TERMINATE_PROCESS_INSTANCE: "#/components/schemas/ProcessInstanceCreationTerminateInstruction"
+    #   oneOf:
+    #     - $ref: "#/components/schemas/ProcessInstanceCreationTerminateInstruction"
+    #   description: "Base type for all runtime instructions.\n"
     ProcessInstanceCreationTerminateInstruction:
-      description: "Terminate the process"
-      allOf:
-        - $ref: "#/components/schemas/ProcessInstanceCreationRuntimeInstruction"
-        - type: "object"
-          required:
-            - "afterElementId"
-          properties:
-            afterElementId:
-              description: "The ID of the element that, once completed or terminated,\
-                \ will cause the process to be terminated.\n"
-              example: "Activity_106kosb"
-              allOf:
-                - $ref: "#/components/schemas/ElementId"
-          description: "Terminates the process instance after a specific BPMN element\
+      description: "Terminates the process instance after a specific BPMN element\
             \ is completed or terminated.\n"
+      type: "object"
+      required:
+        - "afterElementId"
+        - "type"
+      properties:
+        type:
+          type: string
+        afterElementId:
+          description: "The ID of the element that, once completed or terminated,\
+            \ will cause the process to be terminated.\n"
+          example: "Activity_106kosb"
+          allOf:
+            - $ref: "#/components/schemas/ElementId"
     CreateProcessInstanceResult:
       required: 
        - "processDefinitionId"
@@ -11743,7 +11756,8 @@ components:
         $like:
           $ref: "#/components/schemas/LikeFilterProperty"
     BatchOperationStateEnum:
-      description: "The state, one of ACTIVE, COMPLETED, TERMINATED."
+      description: "The batch operation state."
+      type: "string"
       enum:
         - "CREATED"
         - "ACTIVE"
@@ -11840,6 +11854,7 @@ components:
           $ref: "#/components/schemas/LikeFilterProperty"
     BatchOperationItemStateEnum:
       description: "The state, one of ACTIVE, COMPLETED, TERMINATED."
+      type: "string"
       enum:
         - "ACTIVE"
         - "COMPLETED"
