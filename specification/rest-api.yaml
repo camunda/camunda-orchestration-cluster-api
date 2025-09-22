@@ -2778,7 +2778,6 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/AuthorizationSearchQuery"
-        required: true
       responses:
         "200":
           description: "The authorization search result."
@@ -4205,7 +4204,6 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/MappingRuleSearchQueryRequest"
-        required: true
       responses:
         "200":
           description: "The mapping rule search result."
@@ -4660,7 +4658,6 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/UserSearchQueryRequest"
-        required: true
       responses:
         "200":
           description: "The user search result."
