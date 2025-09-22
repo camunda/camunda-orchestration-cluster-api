@@ -10363,22 +10363,26 @@ components:
           format: uri
           description: A URI identifying the problem type.
           default: about:blank
+          example: about:blank
         title:
           type: string
           description: A summary of the problem type.
+          example: Bad Request
         status:
           type: integer
           format: int32
           description: The HTTP status code for this problem.
+          example: 400
           minimum: 400
           maximum: 600
         detail:
           type: string
           description: An explanation of the problem in more detail.
+          example: Request property [maxJobsToActivates] cannot be parsed
         instance:
           type: string
-          format: uri
-          description: A URI identifying the origin of the problem.
+          description: A URI path identifying the origin of the problem.
+          example: /v2/jobs/activation
     SearchQueryRequest:
       type: object
       properties:
