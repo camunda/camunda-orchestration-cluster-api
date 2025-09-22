@@ -4291,7 +4291,7 @@ paths:
           $ref: "#/components/responses/ServiceUnavailable"
       x-eventually-consistent: false
 
-  /correlated-messages-subscriptions/search:
+  /correlated-message-subscriptions/search:
     post:
       tags:
         - "Message subscription"
