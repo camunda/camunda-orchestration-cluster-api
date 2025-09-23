@@ -4493,6 +4493,8 @@ paths:
                 $ref: "#/components/schemas/DocumentReference"
         "400":
           $ref: "#/components/responses/InvalidData"
+        "415":
+          $ref: "#/components/responses/UnsupportedMediaType"
       x-eventually-consistent: false
   /documents/batch:
     post:
@@ -4570,6 +4572,8 @@ paths:
                 $ref: "#/components/schemas/DocumentCreationBatchResponse"
         "400":
           $ref: "#/components/responses/InvalidData"
+        "415":
+          $ref: "#/components/responses/UnsupportedMediaType"
       x-eventually-consistent: false
   /documents/{documentId}:
     get:
@@ -12314,6 +12318,14 @@ components:
             $ref: "#/components/schemas/ProblemDetail"
     InvalidData:
       description: The provided data is not valid.
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/ProblemDetail"
+    UnsupportedMediaType:
+      description: >
+        The server cannot process the request because the media type (Content-Type) of the request payload is not supported 
+        by the server for the requested resource and method.
       content:
         application/problem+json:
           schema:
