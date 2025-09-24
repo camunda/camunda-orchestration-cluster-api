@@ -10247,6 +10247,7 @@ components:
     JobListenerEventTypeEnum:
       example: UNSPECIFIED
       description: The listener event type of the job.
+      type: string
       enum:
         - ASSIGNING
         - CANCELING
