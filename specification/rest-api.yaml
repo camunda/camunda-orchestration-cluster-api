@@ -6272,6 +6272,8 @@ components:
       type: object
       allOf:
         - $ref: "#/components/schemas/SearchQueryResponse"
+      required:
+        - items
       properties:
         items:
           description: The matching variables.
@@ -6295,6 +6297,8 @@ components:
       type: object
       allOf:
         - $ref: "#/components/schemas/VariableResultBase"
+      required:
+        - value
       properties:
         value:
           description: Full value of this variable.
@@ -6302,6 +6306,13 @@ components:
     VariableResultBase:
       description: Variable response item.
       type: object
+      required:
+        - name 
+        - processInstanceKey 
+        - isTruncated
+        - tenantId 
+        - variableKey 
+        - scopeKey
       properties:
         name:
           description: Name of this variable.
