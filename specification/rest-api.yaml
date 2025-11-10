@@ -5957,6 +5957,8 @@ components:
         - $ref: "#/components/schemas/SearchQueryResponse"
       properties:
         items:
+          required: 
+            - items
           description: The matching user tasks.
           type: array
           items:
@@ -6100,6 +6102,8 @@ components:
             - $ref: "#/components/schemas/StringFilterProperty"
     UserTaskResult:
       type: object
+      required:
+        - userTaskKey
       properties:
         name:
           type: string
