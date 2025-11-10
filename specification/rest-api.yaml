@@ -5953,12 +5953,12 @@ components:
     UserTaskSearchQueryResult:
       description: User task search query response.
       type: object
+      required: 
+        - items
       allOf:
         - $ref: "#/components/schemas/SearchQueryResponse"
       properties:
         items:
-          required: 
-            - items
           description: The matching user tasks.
           type: array
           items:
